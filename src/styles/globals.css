@@ -1,0 +1,188 @@
+/* ============================================
+   DESIGN SYSTEM — Calculadora de Inflación
+   Based on DESIGN.md
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* ── Colors (from DESIGN.md) ── */
+  --color-primary: #0F172A;
+  --color-primary-action: #2563EB;
+  --color-primary-action-hover: #1D4ED8;
+  --color-accent: #FBBF24;
+  --color-accent-hover: #F59E0B;
+  --color-bg: #FFFFFF;
+  --color-surface: #F8FAFC;
+  --color-border: #E2E8F0;
+  --color-text-primary: #0B1220;
+  --color-text-secondary: #475569;
+  --color-success: #16A34A;
+  --color-warning: #F59E0B;
+  --color-error: #DC2626;
+  --color-info: #0EA5E9;
+
+  /* ── Typography ── */
+  --font-family: 'Onest', system-ui, -apple-system, sans-serif;
+  --font-size-h1: clamp(32px, 5vw, 56px);
+  --font-size-h2: clamp(24px, 3.5vw, 36px);
+  --font-size-h3: clamp(20px, 2.5vw, 28px);
+  --font-size-body: 17px;
+  --font-size-small: 15px;
+  --font-size-label: 13px;
+  --line-height-heading: 1.15;
+  --line-height-body: 1.6;
+
+  /* ── Spacing ── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+  --section-pad: var(--space-4xl);
+
+  /* ── Layout ── */
+  --max-width: 1150px;
+  --radius-card: 18px;
+  --radius-input: 13px;
+  --radius-button: 13px;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-elevated: 0 4px 12px rgba(15, 23, 42, 0.08), 0 1px 4px rgba(15, 23, 42, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(37, 99, 235, 0.25);
+
+  /* ── Transitions ── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+}
+
+/* ── Typography ── */
+h1, h2, h3, h4 {
+  font-family: var(--font-family);
+  line-height: var(--line-height-heading);
+  color: var(--color-primary);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+  font-weight: 600;
+}
+
+p {
+  color: var(--color-text-secondary);
+}
+
+a {
+  color: var(--color-primary-action);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-action-hover);
+  text-decoration: underline;
+}
+
+/* ── Layout Utilities ── */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+}
+
+.section {
+  padding-top: var(--section-pad);
+  padding-bottom: var(--section-pad);
+}
+
+/* ── Focus Styles (WCAG AA) ── */
+:focus-visible {
+  outline: 2px solid var(--color-primary-action);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(37, 99, 235, 0.15);
+  color: var(--color-primary);
+}
+
+/* ── Scrollbar (subtle) ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+/* ── Screen reader only ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Responsive section padding ── */
+@media (max-width: 768px) {
+  :root {
+    --section-pad: 48px;
+    --font-size-body: 16px;
+  }
+
+  .container {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+}
