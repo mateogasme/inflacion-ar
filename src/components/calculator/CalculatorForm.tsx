@@ -19,21 +19,27 @@ interface CalculatorFormProps {
     onCalculate: (data: FormData) => void;
     minDate?: { year: number; month: number };
     maxDate?: { year: number; month: number };
+    gapMonths?: string[];
     isLoading?: boolean;
+    initialData?: { amount?: string; originMonth?: number; originYear?: number; destMonth?: number; destYear?: number };
 }
 
 export default function CalculatorForm({
     onCalculate,
-    minDate = { year: 2016, month: 12 },
+    minDate = { year: 1943, month: 1 },
     maxDate = { year: 2026, month: 1 },
+    gapMonths = [],
     isLoading = false,
+    initialData,
 }: CalculatorFormProps) {
-    const [amountStr, setAmountStr] = useState('');
-    const [originMonth, setOriginMonth] = useState(minDate.month);
-    const [originYear, setOriginYear] = useState(minDate.year);
-    const [destMonth, setDestMonth] = useState(maxDate.month);
-    const [destYear, setDestYear] = useState(maxDate.year);
+    const [amountStr, setAmountStr] = useState(initialData?.amount || '');
+    const [originMonth, setOriginMonth] = useState(initialData?.originMonth || minDate.month);
+    const [originYear, setOriginYear] = useState(initialData?.originYear || minDate.year);
+    const [destMonth, setDestMonth] = useState(initialData?.destMonth || maxDate.month);
+    const [destYear, setDestYear] = useState(initialData?.destYear || maxDate.year);
     const [errors, setErrors] = useState<Record<string, string>>({});
+
+    const gapSet = new Set(gapMonths);
 
     const validate = useCallback((): FormData | null => {
         const newErrors: Record<string, string> = {};
@@ -56,6 +62,17 @@ export default function CalculatorForm({
             newErrors.dest = `Fecha fuera de rango (${minDate.month}/${minDate.year} — ${maxDate.month}/${maxDate.year})`;
         }
 
+        // Check gap
+        const originDateKey = `${originYear}-${String(originMonth).padStart(2, '0')}`;
+        const destDateKey = `${destYear}-${String(destMonth).padStart(2, '0')}`;
+
+        if (gapSet.has(originDateKey)) {
+            newErrors.origin = 'No hay datos oficiales del IPC para este período (INDEC intervenido entre 2014 y 2016)';
+        }
+        if (gapSet.has(destDateKey)) {
+            newErrors.dest = 'No hay datos oficiales del IPC para este período (INDEC intervenido entre 2014 y 2016)';
+        }
+
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length > 0) return null;
@@ -67,7 +84,7 @@ export default function CalculatorForm({
             destMonth,
             destYear,
         };
-    }, [amountStr, originMonth, originYear, destMonth, destYear, minDate, maxDate]);
+    }, [amountStr, originMonth, originYear, destMonth, destYear, minDate, maxDate, gapSet]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -112,8 +129,55 @@ export default function CalculatorForm({
                     maxYear={maxDate.year}
                     minMonth={minDate.month}
                     maxMonth={maxDate.month}
+                    gapMonths={gapMonths}
                     error={errors.origin}
                 />
+
+                {/* Swap button */}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setOriginMonth(destMonth);
+                            setOriginYear(destYear);
+                            setDestMonth(originMonth);
+                            setDestYear(originYear);
+                            handleDateChange();
+                        }}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            border: '1.5px solid var(--color-border)',
+                            backgroundColor: 'var(--color-surface)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            color: 'var(--color-text-secondary)',
+                        }}
+                        aria-label="Invertir fechas de origen y destino"
+                        title="Invertir fechas"
+                        onMouseEnter={(e) => {
+                            (e.currentTarget.style.borderColor) = 'var(--color-primary-action)';
+                            (e.currentTarget.style.color) = 'var(--color-primary-action)';
+                            (e.currentTarget.style.transform) = 'rotate(180deg)';
+                        }}
+                        onMouseLeave={(e) => {
+                            (e.currentTarget.style.borderColor) = 'var(--color-border)';
+                            (e.currentTarget.style.color) = 'var(--color-text-secondary)';
+                            (e.currentTarget.style.transform) = 'rotate(0deg)';
+                        }}
+                    >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="7 3 7 21" />
+                            <polyline points="3 7 7 3 11 7" />
+                            <polyline points="17 21 17 3" />
+                            <polyline points="13 17 17 21 21 17" />
+                        </svg>
+                    </button>
+                </div>
 
                 {/* Destination Date */}
                 <MonthYearPicker
@@ -126,6 +190,7 @@ export default function CalculatorForm({
                     maxYear={maxDate.year}
                     minMonth={minDate.month}
                     maxMonth={maxDate.month}
+                    gapMonths={gapMonths}
                     error={errors.dest}
                 />
 

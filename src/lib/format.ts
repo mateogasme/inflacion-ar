@@ -45,6 +45,35 @@ export function formatPercent(value: number, decimals: number = 2): string {
 }
 
 /**
+ * Format an IPC value for display.
+ * For very small values (< 0.01), uses scientific notation.
+ * e.g., 4.29e-13 → "4,29 × 10⁻¹³"
+ */
+export function formatIPCValue(value: number): string {
+    if (value === 0) return '0';
+    if (value >= 0.01) {
+        return formatNumber(value, 2);
+    }
+
+    // Scientific notation with Unicode superscripts
+    const exp = Math.floor(Math.log10(Math.abs(value)));
+    const mantissa = value / Math.pow(10, exp);
+
+    const superscripts: Record<string, string> = {
+        '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+        '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻',
+    };
+
+    const expStr = String(exp).split('').map(c => superscripts[c] || c).join('');
+    const mantissaStr = new Intl.NumberFormat(AR_LOCALE, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(mantissa);
+
+    return `${mantissaStr} × 10${expStr}`;
+}
+
+/**
  * Format a DateYM to human-readable string.
  * e.g., { year: 2023, month: 3 } → "Marzo 2023"
  */

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Card from '@/components/ui/Card';
-import { formatNumber, formatPercent, formatMonthYear } from '@/lib/format';
+import { formatNumber, formatPercent, formatMonthYear, formatIPCValue } from '@/lib/format';
 import type { CalculationResult } from '@/lib/calculations';
 
 interface SummaryTableProps {
@@ -19,11 +19,11 @@ export default function SummaryTable({
     const rows = [
         {
             label: `IPC ${formatMonthYear(originDate.year, originDate.month)}`,
-            value: formatNumber(result.ipcOrigin, 2),
+            value: formatIPCValue(result.ipcOrigin),
         },
         {
             label: `IPC ${formatMonthYear(destDate.year, destDate.month)}`,
-            value: formatNumber(result.ipcDest, 2),
+            value: formatIPCValue(result.ipcDest),
         },
         {
             label: 'Ratio (IPC destino / IPC origen)',

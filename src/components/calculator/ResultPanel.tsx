@@ -4,6 +4,13 @@ import React from 'react';
 import Card from '@/components/ui/Card';
 import { formatCurrency, formatPercent, formatMonthYear } from '@/lib/format';
 import type { CalculationResult } from '@/lib/calculations';
+import {
+    needsConversion,
+    convertToModernARS,
+    getEra,
+    getZerosRemoved,
+    getCurrencyChangesBetween,
+} from '@/lib/currency-eras';
 
 interface ResultPanelProps {
     result: CalculationResult;
@@ -18,13 +25,29 @@ export default function ResultPanel({
     originDate,
     destDate,
 }: ResultPanelProps) {
+    const showConversion = needsConversion(
+        originDate.year, originDate.month,
+        destDate.year, destDate.month
+    );
+
+    const originEra = getEra(originDate.year, originDate.month);
+    const destEra = getEra(destDate.year, destDate.month);
+
+    const modernAmount = showConversion
+        ? convertToModernARS(result.adjustedAmount, originDate.year, originDate.month)
+        : result.adjustedAmount;
+
+    const zerosRemoved = showConversion
+        ? getZerosRemoved(originDate.year, originDate.month, destDate.year, destDate.month)
+        : 0;
+
+    const currencyChanges = showConversion
+        ? getCurrencyChangesBetween(originDate.year, originDate.month, destDate.year, destDate.month)
+        : [];
+
     return (
-        <div
-            style={{
-                animation: 'fadeSlideUp 0.4s ease-out',
-            }}
-        >
-            {/* Main result */}
+        <div style={{ animation: 'fadeSlideUp 0.4s ease-out' }}>
+            {/* Main result — in modern ARS */}
             <Card
                 padding="lg"
                 style={{
@@ -45,7 +68,7 @@ export default function ResultPanel({
                             fontWeight: 500,
                         }}
                     >
-                        Monto ajustado por inflación
+                        {showConversion ? 'Equivalente en pesos actuales (ARS)' : 'Monto ajustado por inflación'}
                     </p>
                     <p
                         style={{
@@ -57,7 +80,7 @@ export default function ResultPanel({
                             marginBottom: '12px',
                         }}
                     >
-                        {formatCurrency(result.adjustedAmount)}
+                        {formatCurrency(showConversion ? modernAmount : result.adjustedAmount)}
                     </p>
                     <p
                         style={{
@@ -65,12 +88,88 @@ export default function ResultPanel({
                             color: 'rgba(255,255,255,0.5)',
                         }}
                     >
-                        {formatCurrency(originalAmount)} de {formatMonthYear(originDate.year, originDate.month)}
-                        {' → '}
-                        {formatMonthYear(destDate.year, destDate.month)}
+                        {showConversion
+                            ? `${originEra.symbol} ${formatCurrency(originalAmount).replace('$', '').trim()} de ${formatMonthYear(originDate.year, originDate.month)} → ${formatMonthYear(destDate.year, destDate.month)}`
+                            : `${formatCurrency(originalAmount)} de ${formatMonthYear(originDate.year, originDate.month)} → ${formatMonthYear(destDate.year, destDate.month)}`
+                        }
                     </p>
                 </div>
             </Card>
+
+            {/* Currency conversion banner */}
+            {showConversion && (
+                <div
+                    style={{
+                        padding: '14px 18px',
+                        borderRadius: '12px',
+                        background: 'linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%)',
+                        border: '1px solid #BFDBFE',
+                        marginBottom: '16px',
+                        fontSize: '14px',
+                        lineHeight: 1.6,
+                        color: '#1E40AF',
+                    }}
+                >
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '2px' }}>
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="16" x2="12" y2="12" />
+                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                        </svg>
+                        <div>
+                            <p style={{ fontWeight: 600, marginBottom: '4px' }}>
+                                Conversión de signo monetario aplicada
+                            </p>
+                            <p style={{ color: '#3B82F6' }}>
+                                En {formatMonthYear(originDate.year, originDate.month)} la moneda era el <strong>{originEra.name} ({originEra.symbol})</strong>.
+                                Desde entonces se eliminaron <strong>{zerosRemoved} ceros</strong> en {currencyChanges.length}
+                                {currencyChanges.length === 1 ? ' reforma' : ' reformas'} monetaria{currencyChanges.length === 1 ? '' : 's'}.
+                            </p>
+
+                            {/* Mini timeline of changes */}
+                            {currencyChanges.length > 0 && (
+                                <div style={{
+                                    marginTop: '10px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '4px',
+                                }}>
+                                    {currencyChanges.map((change, i) => (
+                                        <div
+                                            key={i}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '8px',
+                                                fontSize: '12px',
+                                                color: '#60A5FA',
+                                            }}
+                                        >
+                                            <span style={{
+                                                fontFamily: 'ui-monospace, monospace',
+                                                backgroundColor: '#DBEAFE',
+                                                padding: '2px 6px',
+                                                borderRadius: '4px',
+                                                fontSize: '11px',
+                                                color: '#1E40AF',
+                                                fontWeight: 600,
+                                            }}>
+                                                {change.year}
+                                            </span>
+                                            <span>
+                                                {change.from.symbol} → {change.to.symbol}
+                                            </span>
+                                            <span style={{ color: '#93C5FD' }}>
+                                                (÷ 10<sup>{change.zerosRemoved}</sup>)
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Secondary metrics */}
             <div

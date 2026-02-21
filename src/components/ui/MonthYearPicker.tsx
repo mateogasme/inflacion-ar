@@ -27,6 +27,7 @@ interface MonthYearPickerProps {
     maxYear?: number;
     minMonth?: number; // min month for minYear
     maxMonth?: number; // max month for maxYear
+    gapMonths?: string[]; // "YYYY-MM" strings for months with no data
     error?: string;
     id?: string;
 }
@@ -37,25 +38,51 @@ export default function MonthYearPicker({
     year,
     onMonthChange,
     onYearChange,
-    minYear = 2016,
+    minYear = 1943,
     maxYear = 2026,
     minMonth,
     maxMonth,
+    gapMonths = [],
     error,
     id,
 }: MonthYearPickerProps) {
     const baseId = id || label.toLowerCase().replace(/\s+/g, '-');
+
+    // Build a set for fast gap lookups
+    const gapSet = new Set(gapMonths);
+
+    // Check if an entire year is in the gap
+    const isYearFullyInGap = (y: number): boolean => {
+        for (let m = 1; m <= 12; m++) {
+            const key = `${y}-${String(m).padStart(2, '0')}`;
+            if (!gapSet.has(key)) return false;
+        }
+        return true;
+    };
 
     const years: number[] = [];
     for (let y = minYear; y <= maxYear; y++) {
         years.push(y);
     }
 
+    // Check if current month/year is in gap
+    const currentKey = `${year}-${String(month).padStart(2, '0')}`;
+    const isCurrentInGap = gapSet.has(currentKey);
+
     // Filter months based on min/max constraints
     const availableMonths = MONTH_OPTIONS.filter((m) => {
         if (year === minYear && minMonth && m.value < minMonth) return false;
         if (year === maxYear && maxMonth && m.value > maxMonth) return false;
         return true;
+    });
+
+    // Mark gap months as disabled
+    const monthsWithGapInfo = availableMonths.map((m) => {
+        const key = `${year}-${String(m.value).padStart(2, '0')}`;
+        return {
+            ...m,
+            inGap: gapSet.has(key),
+        };
     });
 
     const selectStyle: React.CSSProperties = {
@@ -101,9 +128,13 @@ export default function MonthYearPicker({
                     style={selectStyle}
                     aria-label={`${label} — Mes`}
                 >
-                    {availableMonths.map((m) => (
-                        <option key={m.value} value={m.value}>
-                            {m.label}
+                    {monthsWithGapInfo.map((m) => (
+                        <option
+                            key={m.value}
+                            value={m.value}
+                            disabled={m.inGap}
+                        >
+                            {m.label}{m.inGap ? ' (sin datos)' : ''}
                         </option>
                     ))}
                 </select>
@@ -115,12 +146,39 @@ export default function MonthYearPicker({
                     aria-label={`${label} — Año`}
                 >
                     {years.map((y) => (
-                        <option key={y} value={y}>
-                            {y}
+                        <option
+                            key={y}
+                            value={y}
+                            disabled={isYearFullyInGap(y)}
+                        >
+                            {y}{isYearFullyInGap(y) ? ' (sin datos)' : ''}
                         </option>
                     ))}
                 </select>
             </div>
+
+            {/* Gap warning */}
+            {isCurrentInGap && !error && (
+                <span
+                    role="status"
+                    style={{
+                        fontSize: '13px',
+                        color: 'var(--color-warning)',
+                        fontFamily: 'var(--font-family)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                    }}
+                >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                    Sin datos oficiales para este período (INDEC intervenido)
+                </span>
+            )}
+
             {error && (
                 <span
                     role="alert"

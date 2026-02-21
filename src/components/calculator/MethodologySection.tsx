@@ -2,12 +2,15 @@
 
 import React from 'react';
 import Card from '@/components/ui/Card';
+import type { Segment } from '@/lib/ipc-data';
 
 interface MethodologySectionProps {
     source: string;
     sourceUrl: string;
     lastUpdated: string;
     base: string;
+    segments?: Segment[];
+    gapMonths?: string[];
 }
 
 export default function MethodologySection({
@@ -15,6 +18,8 @@ export default function MethodologySection({
     sourceUrl,
     lastUpdated,
     base,
+    segments = [],
+    gapMonths = [],
 }: MethodologySectionProps) {
     const lastUpdatedDate = new Date(lastUpdated).toLocaleDateString('es-AR', {
         year: 'numeric',
@@ -97,9 +102,10 @@ export default function MethodologySection({
                 >
                     <p style={{ marginBottom: '12px' }}>
                         El cálculo utiliza el <strong style={{ color: 'var(--color-text-primary)' }}>Índice de Precios al Consumidor (IPC)</strong> publicado
-                        por el INDEC con base {base} = 100.
+                        por el INDEC. Todos los valores están re-expresados en base {base} = 100.
                     </p>
 
+                    {/* Formulas */}
                     <div
                         style={{
                             background: 'var(--color-bg)',
@@ -127,10 +133,85 @@ export default function MethodologySection({
                         <strong style={{ color: 'var(--color-text-primary)' }}>CAGR</strong> (Compound Annual Growth Rate)
                         es la tasa de inflación promedio anualizada, útil para comparar períodos de distinta duración.
                     </p>
-                    <p>
+                    <p style={{ marginBottom: '16px' }}>
                         Los valores se redondean a 2 decimales. No se utilizan datos estimados ni interpolados.
                         Si un mes no tiene datos oficiales publicados, se indica como faltante.
                     </p>
+
+                    {/* Segments — data sources for each time period */}
+                    {segments.length > 0 && (
+                        <>
+                            <h4 style={{
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                color: 'var(--color-primary)',
+                                marginBottom: '10px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em',
+                            }}>
+                                Tramos de datos
+                            </h4>
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '6px',
+                                marginBottom: '16px',
+                            }}>
+                                {segments.map((seg, i) => {
+                                    const isGap = seg.source === 'N/A';
+                                    return (
+                                        <div
+                                            key={i}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '10px',
+                                                padding: '8px 12px',
+                                                borderRadius: '8px',
+                                                backgroundColor: isGap ? '#FEF3C7' : 'var(--color-bg)',
+                                                border: `1px solid ${isGap ? '#FDE68A' : 'var(--color-border)'}`,
+                                                fontSize: '13px',
+                                            }}
+                                        >
+                                            <span style={{
+                                                fontFamily: 'ui-monospace, monospace',
+                                                fontSize: '12px',
+                                                color: 'var(--color-text-secondary)',
+                                                whiteSpace: 'nowrap',
+                                            }}>
+                                                {seg.startDate} → {seg.endDate}
+                                            </span>
+                                            <span style={{
+                                                color: isGap ? '#92400E' : 'var(--color-text-primary)',
+                                                fontWeight: isGap ? 600 : 400,
+                                            }}>
+                                                {seg.label}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </>
+                    )}
+
+                    {/* Gap explanation */}
+                    {gapMonths.length > 0 && (
+                        <div style={{
+                            padding: '12px 16px',
+                            borderRadius: '8px',
+                            backgroundColor: '#FFF7ED',
+                            border: '1px solid #FED7AA',
+                            fontSize: '14px',
+                            lineHeight: 1.6,
+                            color: '#9A3412',
+                        }}>
+                            <strong>Nota sobre el período 2014–2016:</strong> Entre enero de 2014 y
+                            noviembre de 2016, el INDEC estuvo intervenido y no publicó datos oficiales
+                            del IPC considerados confiables. Este período se excluye de la calculadora.
+                            No se utilizan datos estimados ni de fuentes alternativas para mantener la
+                            integridad de los cálculos.
+                        </div>
+                    )}
                 </div>
             </details>
         </Card>

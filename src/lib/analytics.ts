@@ -10,7 +10,8 @@ type EventName =
     | 'country_selected'
     | 'date_range_changed'
     | 'copy_result_clicked'
-    | 'export_clicked';
+    | 'export_clicked'
+    | 'share_link_clicked';
 
 interface EventParams {
     [key: string]: string | number | boolean | undefined;

@@ -4,22 +4,35 @@
  * Provides typed access to IPC (Consumer Price Index) data
  * stored as static JSON files in /public/data/.
  *
- * Data source: INDEC / datos.gob.ar — IPC Nacional base dic-2016 = 100
+ * Data sources: INDEC historical (1943-2008), IPC-GBA (1993-2013),
+ * IPC Nacional (2016-present) — all via datos.gob.ar
+ *
+ * All values are rebased to dic-2016 = 100.
  */
 
 export interface IPCEntry {
     date: string;   // "YYYY-MM"
-    value: number;   // IPC index value
+    value: number;  // IPC index value (base dic-2016 = 100)
+}
+
+export interface Segment {
+    label: string;
+    source: string;
+    startDate: string;
+    endDate: string;
 }
 
 export interface IPCDataset {
     country: string;
     currency: string;
-    base: string;         // base period "YYYY-MM"
+    base: string;           // base period "YYYY-MM"
     source: string;
     sourceUrl: string;
-    lastUpdated: string;  // ISO date
+    lastUpdated: string;    // ISO date
     series: IPCEntry[];
+    segments: Segment[];    // description of each data tranche
+    gapMonths: string[];    // months with no official data (e.g. 2014-01 to 2016-11)
+    missingMonths: string[]; // unexpected missing months outside the gap
 }
 
 let cachedData: IPCDataset | null = null;
@@ -49,8 +62,16 @@ export async function loadIPCData(): Promise<IPCDataset> {
 }
 
 /**
+ * Check if a date falls within the official data gap (INDEC intervention).
+ */
+export function isInGap(gapMonths: string[], year: number, month: number): boolean {
+    const dateKey = `${year}-${String(month).padStart(2, '0')}`;
+    return gapMonths.includes(dateKey);
+}
+
+/**
  * Get the IPC value for a specific month/year.
- * Returns null if not found.
+ * Returns null if not found (either gap or out of range).
  */
 export function getIPCValue(series: IPCEntry[], year: number, month: number): number | null {
     const dateKey = `${year}-${String(month).padStart(2, '0')}`;
