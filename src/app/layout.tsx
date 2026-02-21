@@ -75,6 +75,8 @@ export default function RootLayout({
               alignItems: 'center',
               justifyContent: 'space-between',
               height: '64px',
+              maxWidth: '900px',
+              padding: 0,
             }}
           >
             <a
