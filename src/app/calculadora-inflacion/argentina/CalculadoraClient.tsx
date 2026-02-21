@@ -30,6 +30,7 @@ export default function CalculadoraArgentinaPage() {
     const [formData, setFormData] = useState<FormData | null>(null);
     const [chartSeries, setChartSeries] = useState<IPCEntry[]>([]);
     const autoCalcDone = useRef(false);
+    const resultRef = useRef<HTMLDivElement>(null);
 
     // Parse URL query params for deep linking
     const urlParams = {
@@ -95,6 +96,11 @@ export default function CalculadoraArgentinaPage() {
             );
 
             setResult(calcResult);
+
+            // Smooth scroll to result
+            setTimeout(() => {
+                resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
 
             // Update URL without navigation
             const url = new URL(window.location.href.split('?')[0]);
@@ -325,7 +331,7 @@ export default function CalculadoraArgentinaPage() {
 
                             {/* Result */}
                             {result && formData && (
-                                <>
+                                <div ref={resultRef} style={{ scrollMarginTop: '140px' }}>
                                     <ResultPanel
                                         result={result}
                                         originalAmount={formData.amount}
@@ -362,7 +368,7 @@ export default function CalculadoraArgentinaPage() {
                                         originDate={{ year: formData.originYear, month: formData.originMonth }}
                                         destDate={{ year: formData.destYear, month: formData.destMonth }}
                                     />
-                                </>
+                                </div>
                             )}
                         </div>
 
