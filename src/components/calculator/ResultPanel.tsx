@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Card from '@/components/ui/Card';
-import { formatCurrency, formatPercent, formatMonthYear } from '@/lib/format';
+import { formatCurrency, formatPercent, formatLargePercent, formatMonthYear, formatNumber } from '@/lib/format';
+import ExpandableValue from '@/components/ui/ExpandableValue';
 import type { CalculationResult } from '@/lib/calculations';
 import {
     needsConversion,
@@ -200,7 +201,15 @@ export default function ResultPanel({
                             lineHeight: 1.2,
                         }}
                     >
-                        {result.cumulativeInflation >= 0 ? '+' : ''}{formatPercent(result.cumulativeInflation)}
+                        {Math.abs(result.cumulativeInflation) >= 1_000_000 ? (
+                            <ExpandableValue
+                                compact={`${result.cumulativeInflation >= 0 ? '+' : ''}${formatLargePercent(result.cumulativeInflation)}`}
+                                full={`${result.cumulativeInflation >= 0 ? '+' : ''}${formatPercent(result.cumulativeInflation)}`}
+                                color={result.cumulativeInflation >= 0 ? 'var(--color-error)' : 'var(--color-success)'}
+                            />
+                        ) : (
+                            <>{result.cumulativeInflation >= 0 ? '+' : ''}{formatPercent(result.cumulativeInflation)}</>
+                        )}
                     </p>
                     <p
                         style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '4px' }}
@@ -230,7 +239,15 @@ export default function ResultPanel({
                             lineHeight: 1.2,
                         }}
                     >
-                        {result.annualizedInflation >= 0 ? '+' : ''}{formatPercent(result.annualizedInflation)}
+                        {Math.abs(result.annualizedInflation) >= 1_000_000 ? (
+                            <ExpandableValue
+                                compact={`${result.annualizedInflation >= 0 ? '+' : ''}${formatLargePercent(result.annualizedInflation)}`}
+                                full={`${result.annualizedInflation >= 0 ? '+' : ''}${formatPercent(result.annualizedInflation)}`}
+                                color={result.annualizedInflation >= 0 ? 'var(--color-error)' : 'var(--color-success)'}
+                            />
+                        ) : (
+                            <>{result.annualizedInflation >= 0 ? '+' : ''}{formatPercent(result.annualizedInflation)}</>
+                        )}
                     </p>
                     <p
                         style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '4px' }}

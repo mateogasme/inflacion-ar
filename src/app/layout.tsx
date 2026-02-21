@@ -139,6 +139,18 @@ export default function RootLayout({
                 Calculadora
               </a>
               <a
+                href="/calculadora-inflacion/argentina#inflacion-por-ano"
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: 'var(--color-text-secondary)',
+                  textDecoration: 'none',
+                  fontFamily: 'var(--font-family)',
+                }}
+              >
+                Inflación por año
+              </a>
+              <a
                 href="/metodologia"
                 style={{
                   fontSize: '14px',

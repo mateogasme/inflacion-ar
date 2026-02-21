@@ -45,6 +45,53 @@ export function formatPercent(value: number, decimals: number = 2): string {
 }
 
 /**
+ * Format a very large percentage using compact notation.
+ * e.g., 2428454965459528000 → "2,43 × 10¹⁸%"
+ * Small values fall back to normal formatPercent.
+ */
+export function formatLargePercent(value: number, decimals: number = 2): string {
+    const abs = Math.abs(value);
+    if (abs < 1_000_000) {
+        return formatPercent(value, decimals);
+    }
+    return formatScientific(value) + '%';
+}
+
+/**
+ * Format a very large number using compact notation.
+ * e.g., 24284549654595 → "2,43 × 10¹³"
+ * Small values fall back to normal formatNumber.
+ */
+export function formatLargeNumber(value: number, decimals: number = 2): string {
+    const abs = Math.abs(value);
+    if (abs < 1_000_000) {
+        return formatNumber(value, decimals);
+    }
+    return formatScientific(value);
+}
+
+/**
+ * Internal: format value in scientific notation with Unicode superscripts.
+ */
+function formatScientific(value: number): string {
+    const exp = Math.floor(Math.log10(Math.abs(value)));
+    const mantissa = value / Math.pow(10, exp);
+
+    const superscripts: Record<string, string> = {
+        '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+        '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻',
+    };
+
+    const expStr = String(exp).split('').map(c => superscripts[c] || c).join('');
+    const mantissaStr = new Intl.NumberFormat(AR_LOCALE, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(mantissa);
+
+    return `${mantissaStr} × 10${expStr}`;
+}
+
+/**
  * Format an IPC value for display.
  * For very small values (< 0.01), uses scientific notation.
  * e.g., 4.29e-13 → "4,29 × 10⁻¹³"

@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Card from '@/components/ui/Card';
-import { formatNumber, formatPercent, formatMonthYear, formatIPCValue } from '@/lib/format';
+import { formatNumber, formatPercent, formatMonthYear, formatIPCValue, formatLargeNumber, formatLargePercent } from '@/lib/format';
+import ExpandableValue from '@/components/ui/ExpandableValue';
 import type { CalculationResult } from '@/lib/calculations';
 
 interface SummaryTableProps {
@@ -20,23 +21,30 @@ export default function SummaryTable({
         {
             label: `IPC ${formatMonthYear(originDate.year, originDate.month)}`,
             value: formatIPCValue(result.ipcOrigin),
+            fullValue: undefined as string | undefined,
         },
         {
             label: `IPC ${formatMonthYear(destDate.year, destDate.month)}`,
             value: formatIPCValue(result.ipcDest),
+            fullValue: undefined as string | undefined,
         },
         {
             label: 'Ratio (IPC destino / IPC origen)',
-            value: formatNumber(result.ratio, 6),
+            value: formatLargeNumber(result.ratio, 6),
+            fullValue: Math.abs(result.ratio) >= 1_000_000 ? formatNumber(result.ratio, 6) : undefined,
         },
         {
             label: 'Variación porcentual',
-            value: `${result.cumulativeInflation >= 0 ? '+' : ''}${formatPercent(result.cumulativeInflation)}`,
+            value: `${result.cumulativeInflation >= 0 ? '+' : ''}${formatLargePercent(result.cumulativeInflation)}`,
+            fullValue: Math.abs(result.cumulativeInflation) >= 1_000_000
+                ? `${result.cumulativeInflation >= 0 ? '+' : ''}${formatPercent(result.cumulativeInflation)}`
+                : undefined,
             highlight: true,
         },
         {
             label: 'Período (meses)',
             value: String(result.months),
+            fullValue: undefined as string | undefined,
         },
     ];
 
@@ -101,7 +109,18 @@ export default function SummaryTable({
                                         ...(i === rows.length - 1 && { borderBottom: 'none' }),
                                     }}
                                 >
-                                    {row.value}
+                                    {row.fullValue ? (
+                                        <ExpandableValue
+                                            compact={row.value}
+                                            full={row.fullValue}
+                                            color={row.highlight
+                                                ? result.cumulativeInflation >= 0
+                                                    ? 'var(--color-error)'
+                                                    : 'var(--color-success)'
+                                                : 'var(--color-primary-action)'
+                                            }
+                                        />
+                                    ) : row.value}
                                 </td>
                             </tr>
                         ))}
