@@ -149,9 +149,9 @@ export default function MonthYearPicker({
                         <option
                             key={y}
                             value={y}
-                            disabled={isYearFullyInGap(y)}
+                            disabled={isYearFullyInGap(y) || y === 2016}
                         >
-                            {y}{isYearFullyInGap(y) ? ' (sin datos)' : ''}
+                            {y}{isYearFullyInGap(y) || y === 2016 ? ' (sin datos)' : ''}
                         </option>
                     ))}
                 </select>

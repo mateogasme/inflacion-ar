@@ -6,9 +6,10 @@ import { trackEvent } from '@/lib/analytics';
 
 interface CopyResultButtonProps {
     text: string;
+    fullWidth?: boolean;
 }
 
-export default function CopyResultButton({ text }: CopyResultButtonProps) {
+export default function CopyResultButton({ text, fullWidth }: CopyResultButtonProps) {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
@@ -37,6 +38,7 @@ export default function CopyResultButton({ text }: CopyResultButtonProps) {
         <Button
             variant="secondary"
             size="sm"
+            fullWidth={fullWidth}
             onClick={handleCopy}
             aria-label={copied ? 'Resultado copiado' : 'Copiar resultado al portapapeles'}
         >

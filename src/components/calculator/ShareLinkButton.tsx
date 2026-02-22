@@ -8,9 +8,10 @@ interface ShareLinkButtonProps {
     amount: number;
     originDate: string; // "YYYY-MM"
     destDate: string;   // "YYYY-MM"
+    fullWidth?: boolean;
 }
 
-export default function ShareLinkButton({ amount, originDate, destDate }: ShareLinkButtonProps) {
+export default function ShareLinkButton({ amount, originDate, destDate, fullWidth }: ShareLinkButtonProps) {
     const [copied, setCopied] = useState(false);
 
     const handleClick = async () => {
@@ -41,6 +42,7 @@ export default function ShareLinkButton({ amount, originDate, destDate }: ShareL
         <Button
             variant="secondary"
             size="sm"
+            fullWidth={fullWidth}
             onClick={handleClick}
             aria-label="Compartir enlace con este cálculo"
         >

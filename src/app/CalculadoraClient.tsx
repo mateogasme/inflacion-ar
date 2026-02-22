@@ -165,16 +165,7 @@ export default function CalculadoraArgentinaPage() {
         ? buildDateKey(formData.destYear, formData.destMonth)
         : '';
 
-    // Generate year links for internal linking
-    const allYears: { year: number; isGap: boolean }[] = [];
-    if (ipcData) {
-        const yearSet = new Set(ipcData.series.map(e => parseInt(e.date.split('-')[0])));
-        const maxYear = Math.max(...Array.from(yearSet));
-        for (let y = maxYear; y >= 1993; y--) {
-            const isGap = !yearSet.has(y) || y === 2014 || y === 2015;
-            allYears.push({ year: y, isGap });
-        }
-    }
+
 
     return (
         <>
@@ -341,8 +332,15 @@ export default function CalculadoraArgentinaPage() {
                                     />
 
                                     {/* Actions */}
-                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '16px', marginBottom: '16px' }}>
+                                    <div style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                                        gap: '8px',
+                                        marginTop: '16px',
+                                        marginBottom: '16px'
+                                    }}>
                                         <CopyResultButton
+                                            fullWidth
                                             text={generateCopyText(
                                                 formData.amount,
                                                 originDateKey,
@@ -353,11 +351,13 @@ export default function CalculadoraArgentinaPage() {
                                             )}
                                         />
                                         <ExportCSVButton
+                                            fullWidth
                                             series={chartSeries}
                                             startDate={originDateKey}
                                             endDate={destDateKey}
                                         />
                                         <ShareLinkButton
+                                            fullWidth
                                             amount={formData.amount}
                                             originDate={originDateKey}
                                             destDate={destDateKey}
@@ -400,70 +400,6 @@ export default function CalculadoraArgentinaPage() {
                         />
                     )}
 
-                    {/* Internal links — SEO by year */}
-                    {allYears.length > 0 && (
-                        <div id="inflacion-por-ano" style={{ marginBottom: '40px' }}>
-                            <Card padding="lg" variant="surface">
-                                <h3 style={{
-                                    fontSize: '15px',
-                                    fontWeight: 600,
-                                    color: 'var(--color-primary)',
-                                    marginBottom: '12px',
-                                }}>
-                                    Inflación por año
-                                </h3>
-                                <div style={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    gap: '6px',
-                                }}>
-                                    {allYears.map(item => {
-                                        if (item.isGap) {
-                                            return (
-                                                <span
-                                                    key={item.year}
-                                                    title="Datos oficiales no disponibles"
-                                                    style={{
-                                                        padding: '6px 12px',
-                                                        fontSize: '13px',
-                                                        fontWeight: 500,
-                                                        color: 'var(--color-text-secondary)',
-                                                        backgroundColor: 'transparent',
-                                                        border: '1px dashed var(--color-border)',
-                                                        borderRadius: '8px',
-                                                        opacity: 0.5,
-                                                        cursor: 'not-allowed',
-                                                        textDecoration: 'line-through'
-                                                    }}
-                                                >
-                                                    {item.year}
-                                                </span>
-                                            );
-                                        }
-                                        return (
-                                            <a
-                                                key={item.year}
-                                                href={`/calculadora-inflacion/argentina/${item.year}`}
-                                                style={{
-                                                    padding: '6px 12px',
-                                                    fontSize: '13px',
-                                                    fontWeight: 500,
-                                                    color: 'var(--color-primary-action)',
-                                                    backgroundColor: 'var(--color-bg)',
-                                                    border: '1px solid var(--color-border)',
-                                                    borderRadius: '8px',
-                                                    textDecoration: 'none',
-                                                    transition: 'all 0.15s ease',
-                                                }}
-                                            >
-                                                {item.year}
-                                            </a>
-                                        );
-                                    })}
-                                </div>
-                            </Card>
-                        </div>
-                    )}
 
                     {/* FAQ */}
                     <FAQ />

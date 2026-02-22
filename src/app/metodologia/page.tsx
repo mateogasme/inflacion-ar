@@ -216,7 +216,7 @@ export default function MetodologiaPage() {
                 {/* Back link */}
                 <div style={{ marginTop: '40px' }}>
                     <a
-                        href="/calculadora-inflacion/argentina"
+                        href="/"
                         style={{
                             display: 'inline-flex',
                             alignItems: 'center',

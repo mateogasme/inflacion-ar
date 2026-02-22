@@ -9,12 +9,14 @@ interface ExportCSVButtonProps {
     series: IPCEntry[];
     startDate: string;
     endDate: string;
+    fullWidth?: boolean;
 }
 
 export default function ExportCSVButton({
     series,
     startDate,
     endDate,
+    fullWidth,
 }: ExportCSVButtonProps) {
     const handleExport = () => {
         trackEvent('export_clicked', { start: startDate, end: endDate });
@@ -41,6 +43,7 @@ export default function ExportCSVButton({
         <Button
             variant="secondary"
             size="sm"
+            fullWidth={fullWidth}
             onClick={handleExport}
             aria-label="Descargar datos IPC en formato CSV"
         >

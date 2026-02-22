@@ -127,7 +127,7 @@ export default function RootLayout({
 
             <nav style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
               <a
-                href="/calculadora-inflacion/argentina"
+                href="/"
                 style={{
                   fontSize: '14px',
                   fontWeight: 500,
@@ -139,7 +139,7 @@ export default function RootLayout({
                 Calculadora
               </a>
               <a
-                href="/calculadora-inflacion/argentina#inflacion-por-ano"
+                href="/inflacion-por-anio"
                 style={{
                   fontSize: '14px',
                   fontWeight: 500,
@@ -227,7 +227,7 @@ export default function RootLayout({
                     Herramientas
                   </p>
                   <a
-                    href="/calculadora-inflacion/argentina"
+                    href="/"
                     style={{
                       fontSize: '13px',
                       color: 'var(--color-text-secondary)',

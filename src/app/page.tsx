@@ -1,5 +1,10 @@
-import { redirect } from 'next/navigation';
+import React, { Suspense } from 'react';
+import CalculadoraClient from './CalculadoraClient';
 
-export default function Home() {
-  redirect('/calculadora-inflacion/argentina');
+export default function CalculadoraArgentinaPage() {
+    return (
+        <Suspense>
+            <CalculadoraClient />
+        </Suspense>
+    );
 }

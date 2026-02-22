@@ -5,7 +5,7 @@ export default function SchemaOrg() {
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
         name: 'Calculadora de Inflación Argentina',
-        url: 'https://calculadora-inflacion.ar/calculadora-inflacion/argentina',
+        url: 'https://calculadora-inflacion.ar',
         description:
             'Calculá cuánto vale hoy un monto del pasado usando datos oficiales del IPC (INDEC). Inflación acumulada, promedio anual y gráfico.',
         applicationCategory: 'FinanceApplication',

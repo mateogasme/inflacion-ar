@@ -88,7 +88,7 @@ export default async function InflacionAnioPage({ params }: PageProps) {
             <div style={{ maxWidth: '800px', margin: '0 auto' }}>
                 {/* Breadcrumb */}
                 <nav style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '24px' }}>
-                    <a href="/calculadora-inflacion/argentina" style={{ color: 'var(--color-primary-action)', textDecoration: 'none' }}>
+                    <a href="/" style={{ color: 'var(--color-primary-action)', textDecoration: 'none' }}>
                         Calculadora
                     </a>
                     {' › '}
@@ -203,7 +203,7 @@ export default async function InflacionAnioPage({ params }: PageProps) {
                         ¿Querés calcular cuánto vale un monto de {year} en pesos de hoy?
                     </p>
                     <a
-                        href={`/calculadora-inflacion/argentina?desde=${year}-01&hasta=${maxDate.year}-${String(maxDate.month).padStart(2, '0')}&monto=1000`}
+                        href={`/?desde=${year}-01&hasta=${maxDate.year}-${String(maxDate.month).padStart(2, '0')}&monto=1000`}
                         style={{
                             display: 'inline-flex',
                             alignItems: 'center',
@@ -225,15 +225,15 @@ export default async function InflacionAnioPage({ params }: PageProps) {
                 {/* Year navigation */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     {adjPrev ? (
-                        <a href={`/calculadora-inflacion/argentina/${adjPrev}`} style={{ color: 'var(--color-primary-action)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+                        <a href={`/${adjPrev}`} style={{ color: 'var(--color-primary-action)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
                             ← Inflación {adjPrev}
                         </a>
                     ) : <span />}
-                    <a href="/calculadora-inflacion/argentina" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '13px' }}>
+                    <a href="/" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '13px' }}>
                         Volver a la calculadora
                     </a>
                     {adjNext ? (
-                        <a href={`/calculadora-inflacion/argentina/${adjNext}`} style={{ color: 'var(--color-primary-action)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+                        <a href={`/${adjNext}`} style={{ color: 'var(--color-primary-action)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
                             Inflación {adjNext} →
                         </a>
                     ) : <span />}
