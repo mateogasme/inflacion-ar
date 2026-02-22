@@ -47,6 +47,7 @@ export default function FAQ() {
                     fontWeight: 600,
                     color: 'var(--color-primary)',
                     marginBottom: '24px',
+                    marginTop: '70px',
                 }}
             >
                 Preguntas frecuentes
