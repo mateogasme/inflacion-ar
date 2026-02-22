@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface AdSlotProps {
     slot: string;
@@ -21,6 +21,20 @@ export default function AdSlot({
     minHeight = 100,
     className = '',
 }: AdSlotProps) {
+    const isLoaded = useRef(false);
+
+    useEffect(() => {
+        if (!isLoaded.current) {
+            try {
+                // @ts-ignore
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+                isLoaded.current = true;
+            } catch (err) {
+                console.error('Error loading AdSense:', err);
+            }
+        }
+    }, [slot]);
+
     return (
         <div
             className={`ad-slot ${className}`}
@@ -37,23 +51,14 @@ export default function AdSlot({
             }}
             aria-hidden="true"
         >
-            {/* 
-        Replace data-ad-client and data-ad-slot with real values.
-        Uncomment <ins> and <script> when AdSense is approved.
-      */}
-            {/*
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block', width: '100%', minHeight: `${minHeight}px` }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive="true"
-      />
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-      */}
+            <ins
+                className="adsbygoogle"
+                style={{ display: 'block', width: '100%', minHeight: `${minHeight}px` }}
+                data-ad-client="ca-pub-7966032964949083"
+                data-ad-slot={slot}
+                data-ad-format={format}
+                data-full-width-responsive="true"
+            />
         </div>
     );
 }

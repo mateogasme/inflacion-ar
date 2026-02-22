@@ -358,7 +358,7 @@ export default function CalculadoraArgentinaPage() {
 
                         {/* Desktop Ad Sidebar */}
                         <div className="ad-sidebar">
-                            <AdSlot slot="sidebar-1" format="vertical" minHeight={250} />
+                            <AdSlot slot="4222062716" format="vertical" minHeight={250} />
                         </div>
                     </div>
 
@@ -388,7 +388,7 @@ export default function CalculadoraArgentinaPage() {
                     <FAQ />
 
                     {/* Bottom Ad */}
-                    <AdSlot slot="bottom-1" format="horizontal" minHeight={90} />
+                    <AdSlot slot="4222062716" format="horizontal" minHeight={90} />
                 </div>
             </section>
 
