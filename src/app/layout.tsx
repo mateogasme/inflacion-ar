@@ -71,7 +71,7 @@ export default function RootLayout({
         <Script
           id="adsbygoogle-init"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7966032964949083"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           crossOrigin="anonymous"
         />
         {/* Header */}

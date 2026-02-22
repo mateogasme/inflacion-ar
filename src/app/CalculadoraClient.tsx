@@ -22,8 +22,8 @@ import type { IPCDataset, IPCEntry } from '@/lib/ipc-data';
 import { generateCopyText } from '@/lib/format';
 
 const LoadingChartPlaceholder = () => (
-    <Card padding="md">
-        <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--color-surface)', borderRadius: '12px' }}>
+    <Card padding="lg">
+        <div style={{ height: '396px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--color-surface)', borderRadius: '12px' }}>
             <p style={{ color: 'var(--color-text-secondary)', fontSize: '14px' }}>Cargando gráfico interactivo...</p>
         </div>
     </Card>
