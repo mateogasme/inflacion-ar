@@ -28,8 +28,8 @@ export default function MetodologiaPage() {
     };
 
     return (
-        <div className="container" style={{ paddingTop: '48px', paddingBottom: '64px' }}>
-            <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+        <div className="container" style={{ paddingTop: '48px', paddingBottom: '64px', maxWidth: '900px' }}>
+            <div>
                 <h1
                     style={{
                         marginBottom: '16px',

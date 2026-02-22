@@ -6,6 +6,7 @@ import { formatPercent, formatNumber, formatIPCValue } from '@/lib/format';
 import { getEra } from '@/lib/currency-eras';
 import Card from '@/components/ui/Card';
 import ExpandableValue from '@/components/ui/ExpandableValue';
+import { getHistoricalContext } from '@/lib/historical-context';
 
 interface PageProps {
     params: Promise<{ anio: string }>;
@@ -58,6 +59,7 @@ export default async function InflacionAnioPage({ params }: PageProps) {
     const era = getEra(year, 1);
     const minDate = parseDateKey(data.series[0].date);
     const maxDate = parseDateKey(data.series[data.series.length - 1].date);
+    const context = getHistoricalContext(year);
 
     const getExactIpc = (val: number) => new Intl.NumberFormat('es-AR', { maximumFractionDigits: 20 }).format(val);
 
@@ -113,6 +115,23 @@ export default async function InflacionAnioPage({ params }: PageProps) {
                     según datos oficiales del INDEC.
                     {era.code !== 'ARS' && ` En ${year} la moneda vigente era el ${era.name} (${era.symbol}).`}
                 </p>
+
+                {/* Historical Context */}
+                {context && (
+                    <Card padding="md" variant="surface" style={{ marginBottom: '32px', borderLeft: '4px solid var(--color-primary-action)' }}>
+                        <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-primary-action)' }}>
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            Contexto histórico: {context.title}
+                        </h2>
+                        <p style={{ fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.6, margin: 0 }}>
+                            {context.description}
+                        </p>
+                    </Card>
+                )}
 
                 {/* Key metrics */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>

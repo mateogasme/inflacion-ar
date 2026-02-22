@@ -5,8 +5,8 @@ import DonateButton from '@/components/ui/DonateButton';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Calculadora de Inflación Argentina — Ajustá montos por IPC',
-    template: '%s | Calculadora de Inflación',
+    default: 'InflacionAR — Calculadora de Inflación Argentina',
+    template: '%s | InflacionAR',
   },
   description:
     'Calculá cuánto vale hoy un monto del pasado usando datos oficiales del IPC (INDEC). Inflación acumulada, promedio anual y gráfico interactivo.',
@@ -21,12 +21,12 @@ export const metadata: Metadata = {
     'inflación acumulada',
   ],
   openGraph: {
-    title: 'Calculadora de Inflación Argentina',
+    title: 'InflacionAR — Inflación Argentina',
     description:
       'Ajustá montos por inflación con datos oficiales del IPC (INDEC). Inflación acumulada, CAGR y gráfico.',
     type: 'website',
     locale: 'es_AR',
-    siteName: 'Calculadora de Inflación',
+    siteName: 'InflacionAR',
   },
   robots: {
     index: true,
@@ -116,12 +116,13 @@ export default function RootLayout({
               <span
                 style={{
                   fontWeight: 700,
-                  fontSize: '17px',
+                  fontSize: '20px',
                   color: 'var(--color-primary)',
                   fontFamily: 'var(--font-family)',
+                  letterSpacing: '-0.02em',
                 }}
               >
-                Calculadora de Inflación
+                Inflacion<span style={{ color: 'var(--color-primary-action)' }}>AR</span>
               </span>
             </a>
 
@@ -179,7 +180,7 @@ export default function RootLayout({
             marginTop: '32px',
           }}
         >
-          <div className="container">
+          <div className="container" style={{ maxWidth: '900px' }}>
             <div
               style={{
                 display: 'flex',

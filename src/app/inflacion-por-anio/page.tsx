@@ -48,6 +48,7 @@ export default async function InflacionPorAnioIndexPage() {
                             color: 'var(--color-text-secondary)',
                             margin: '0 auto',
                             lineHeight: 1.6,
+                            maxWidth: '75%'
                         }}
                     >
                         Seleccioná un año para ver la evolución mensual del Índice de Precios al Consumidor (IPC), la inflación acumulada y la variación interanual.
@@ -67,9 +68,11 @@ export default async function InflacionPorAnioIndexPage() {
                             {allYears.map(item => {
                                 if (item.isGap) {
                                     return (
-                                        <span
+                                        <a
                                             key={item.year}
-                                            title="Datos oficiales no disponibles para este período"
+                                            href="/intervencion-indec"
+                                            title="¿Por qué no hay datos disponibles?"
+                                            className="gap-link-card"
                                             style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
@@ -81,13 +84,13 @@ export default async function InflacionPorAnioIndexPage() {
                                                 backgroundColor: 'transparent',
                                                 border: '1px dashed var(--color-border)',
                                                 borderRadius: '12px',
-                                                opacity: 0.5,
-                                                cursor: 'not-allowed',
-                                                textDecoration: 'line-through'
+                                                opacity: 0.6,
+                                                textDecoration: 'line-through',
+                                                transition: 'all 0.2s ease',
                                             }}
                                         >
                                             {item.year}
-                                        </span>
+                                        </a>
                                     );
                                 }
                                 return (
@@ -130,6 +133,14 @@ export default async function InflacionPorAnioIndexPage() {
                     color: var(--color-primary-action) !important;
                     transform: translateY(-2px) !important;
                     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+                }
+                .gap-link-card:hover {
+                    opacity: 1 !important;
+                    border-style: solid !important;
+                    border-color: var(--color-primary-action) !important;
+                    color: var(--color-primary-action) !important;
+                    text-decoration: none !important;
+                    transform: translateY(-1px) !important;
                 }
             `}</style>
         </>

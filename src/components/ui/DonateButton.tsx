@@ -11,8 +11,10 @@ export default function DonateButton() {
 
     return (
         <div style={{ position: 'relative', display: 'inline-flex' }}>
-            <button
-                type="button"
+            <a
+                href="https://link.mercadopago.com.ar/mateogasme"
+                target="_blank"
+                rel="noopener noreferrer"
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
                 style={{
@@ -33,6 +35,7 @@ export default function DonateButton() {
                     position: 'relative',
                     zIndex: 2,
                     transform: showTooltip ? 'translateY(-1px)' : 'translateY(0)',
+                    textDecoration: 'none',
                 }}
             >
                 <img
@@ -41,7 +44,7 @@ export default function DonateButton() {
                     style={{ width: '16px', height: '16px' }}
                 />
                 Donar
-            </button>
+            </a>
 
             {/* Custom Tooltip */}
             <div
@@ -50,7 +53,7 @@ export default function DonateButton() {
                     top: 'calc(100% + 12px)',
                     right: '50%',
                     transform: `translateX(50%) translateY(${showTooltip ? '0' : '8px'})`,
-                    width: '240px',
+                    width: '288px',
                     padding: '12px 16px',
                     backgroundColor: 'var(--color-primary)', // #0F172A
                     color: '#FFFFFF',
@@ -78,7 +81,7 @@ export default function DonateButton() {
                     borderRight: '8px solid transparent',
                     borderBottom: '8px solid var(--color-primary)',
                 }} />
-                Te invitamos a donar. Si lo hacés, ayudás a mantener la calculadora gratis. ¡Sería de gran ayuda! 🚀
+                Este botón es solo para apoyo voluntario. Si querés, podés transferir una donación para ayudar a mantener la calculadora gratis. No hay beneficios por donar.
             </div>
         </div>
     );
