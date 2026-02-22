@@ -1,7 +1,15 @@
 import type { Metadata } from 'next';
+import { Onest } from 'next/font/google';
 import '@/styles/globals.css';
 import React from 'react';
+import Script from 'next/script';
 // import DonateButton from '@/components/ui/DonateButton';
+
+const onest = Onest({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-family',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es-AR">
+    <html lang="es-AR" className={onest.variable}>
       <head>
         {/* Google Analytics placeholder — replace UA-XXXXX with real ID */}
         {/*
@@ -58,13 +66,14 @@ export default function RootLayout({
         />
         */}
         <meta name="google-adsense-account" content="ca-pub-7966032964949083" />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7966032964949083"
-          crossOrigin="anonymous"
-        />
       </head>
       <body>
+        <Script
+          id="adsbygoogle-init"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7966032964949083"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
         {/* Header */}
         <header
           style={{

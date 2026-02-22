@@ -6,7 +6,7 @@ import CalculatorForm from '@/components/calculator/CalculatorForm';
 import type { FormData } from '@/components/calculator/CalculatorForm';
 import ResultPanel from '@/components/calculator/ResultPanel';
 import SummaryTable from '@/components/calculator/SummaryTable';
-import IPCChart from '@/components/charts/IPCChart';
+import dynamic from 'next/dynamic';
 import MethodologySection from '@/components/calculator/MethodologySection';
 import CopyResultButton from '@/components/calculator/CopyResultButton';
 import ExportCSVButton from '@/components/calculator/ExportCSVButton';
@@ -20,6 +20,19 @@ import type { CalculationResult } from '@/lib/calculations';
 import { loadIPCData, getIPCValue, getSeriesSlice, parseDateKey, buildDateKey } from '@/lib/ipc-data';
 import type { IPCDataset, IPCEntry } from '@/lib/ipc-data';
 import { generateCopyText } from '@/lib/format';
+
+const LoadingChartPlaceholder = () => (
+    <Card padding="md">
+        <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--color-surface)', borderRadius: '12px' }}>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: '14px' }}>Cargando gráfico interactivo...</p>
+        </div>
+    </Card>
+);
+
+const DynamicIPCChart = dynamic(() => import('@/components/charts/IPCChart'), {
+    ssr: false,
+    loading: () => <LoadingChartPlaceholder />,
+});
 
 export default function CalculadoraArgentinaPage() {
     const searchParams = useSearchParams();
@@ -349,9 +362,9 @@ export default function CalculadoraArgentinaPage() {
                         </div>
                     </div>
 
-                    {/* Chart */}
+                    {/* Chart (lazy loaded) */}
                     {chartSeries.length > 0 && (
-                        <IPCChart
+                        <DynamicIPCChart
                             series={chartSeries}
                             highlightStart={originDateKey}
                             highlightEnd={destDateKey}
