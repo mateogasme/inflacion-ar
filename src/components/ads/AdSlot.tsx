@@ -29,9 +29,8 @@ export default function AdSlot({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'var(--color-surface)',
-                border: '1px dashed var(--color-border)',
-                borderRadius: 'var(--radius-card)',
+                backgroundColor: 'transparent',
+                border: 'none',
                 overflow: 'hidden',
                 margin: '0 auto',
                 width: '100%',
@@ -55,16 +54,6 @@ export default function AdSlot({
         (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
       */}
-            <span
-                style={{
-                    color: 'var(--color-text-secondary)',
-                    fontSize: '12px',
-                    fontFamily: 'var(--font-family)',
-                    opacity: 0.5,
-                }}
-            >
-                Espacio publicitario
-            </span>
         </div>
     );
 }
