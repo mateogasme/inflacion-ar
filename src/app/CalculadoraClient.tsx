@@ -180,36 +180,6 @@ export default function CalculadoraArgentinaPage() {
                 }}
             >
                 <div className="container">
-                    <div
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            backgroundColor: 'var(--color-surface)',
-                            border: '1px solid var(--color-border)',
-                            borderRadius: '100px',
-                            padding: '6px 14px',
-                            marginBottom: '20px',
-                            fontSize: '13px',
-                            fontWeight: 500,
-                            color: 'var(--color-text-secondary)',
-                        }}
-                    >
-                        <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="var(--color-primary-action)"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                        </svg>
-                        Datos oficiales · INDEC · Desde 1943
-                    </div>
-
                     <h1 style={{ marginBottom: '16px', maxWidth: '700px', margin: '0 auto 16px' }}>
                         Calculadora de Inflación{' '}
                         <span style={{ color: 'var(--color-primary-action)' }}>Argentina</span>
@@ -230,14 +200,14 @@ export default function CalculadoraArgentinaPage() {
             </section>
 
             {/* Calculator + Ad Layout */}
-            <section className="container" style={{ paddingBottom: '32px' }}>
+            <section style={{ paddingBottom: '32px' }}>
                 <div
+                    className="container"
                     style={{
                         display: 'grid',
                         gridTemplateColumns: '1fr',
                         gap: '24px',
                         maxWidth: '900px',
-                        margin: '0 auto',
                     }}
                 >
                     {/* Main calculator area */}

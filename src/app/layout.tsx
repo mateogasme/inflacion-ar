@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import '@/styles/globals.css';
 import React from 'react';
+import DonateButton from '@/components/ui/DonateButton';
 
 export const metadata: Metadata = {
   title: {
@@ -76,7 +77,6 @@ export default function RootLayout({
               justifyContent: 'space-between',
               height: '64px',
               maxWidth: '900px',
-              padding: 0,
             }}
           >
             <a
@@ -162,6 +162,7 @@ export default function RootLayout({
               >
                 Metodología
               </a>
+              <DonateButton />
             </nav>
           </div>
         </header>

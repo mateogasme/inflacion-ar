@@ -5,18 +5,19 @@ import { calculate } from '@/lib/calculations';
 import { formatPercent, formatNumber, formatIPCValue } from '@/lib/format';
 import { getEra } from '@/lib/currency-eras';
 import Card from '@/components/ui/Card';
+import ExpandableValue from '@/components/ui/ExpandableValue';
 
 interface PageProps {
     params: Promise<{ anio: string }>;
 }
 
-const GAP_YEARS = new Set([2014, 2015]);
+const GAP_YEARS = new Set([2014, 2015, 2016]);
 
 export async function generateStaticParams() {
     const data = await loadIPCData();
     const years = new Set(data.series.map(e => e.date.split('-')[0]));
     return Array.from(years)
-        .filter(y => parseInt(y) >= 1993 && !GAP_YEARS.has(parseInt(y)))
+        .filter(y => parseInt(y) >= 1943 && !GAP_YEARS.has(parseInt(y)))
         .map(anio => ({ anio }));
 }
 
@@ -58,6 +59,8 @@ export default async function InflacionAnioPage({ params }: PageProps) {
     const minDate = parseDateKey(data.series[0].date);
     const maxDate = parseDateKey(data.series[data.series.length - 1].date);
 
+    const getExactIpc = (val: number) => new Intl.NumberFormat('es-AR', { maximumFractionDigits: 20 }).format(val);
+
     // Compute annual inflation
     let annualInflation: string | null = null;
     let annualResult = null;
@@ -84,15 +87,15 @@ export default async function InflacionAnioPage({ params }: PageProps) {
     const adjNext = nextYear && GAP_YEARS.has(nextYear) ? nextYear + 1 : nextYear;
 
     return (
-        <section className="container" style={{ paddingTop: '48px', paddingBottom: '48px' }}>
-            <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <section style={{ paddingTop: '48px', paddingBottom: '48px' }}>
+            <div className="container" style={{ maxWidth: '900px' }}>
                 {/* Breadcrumb */}
                 <nav style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '24px' }}>
-                    <a href="/" style={{ color: 'var(--color-primary-action)', textDecoration: 'none' }}>
-                        Calculadora
+                    <a href="/inflacion-por-anio" style={{ color: 'var(--color-primary-action)', textDecoration: 'none' }}>
+                        Inflación por año
                     </a>
                     {' › '}
-                    <span>Inflación {year}</span>
+                    <span>{year}</span>
                 </nav>
 
                 <h1 style={{ marginBottom: '8px' }}>
@@ -132,7 +135,11 @@ export default async function InflacionAnioPage({ params }: PageProps) {
                                 IPC Enero {year}
                             </p>
                             <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1.2 }}>
-                                {formatIPCValue(ipcJan)}
+                                {ipcJan < 0.01 ? (
+                                    <ExpandableValue compact={formatIPCValue(ipcJan)} full={getExactIpc(ipcJan)} color="var(--color-text-primary)" />
+                                ) : (
+                                    formatIPCValue(ipcJan)
+                                )}
                             </p>
                         </Card>
                     )}
@@ -142,7 +149,11 @@ export default async function InflacionAnioPage({ params }: PageProps) {
                                 IPC Diciembre {year}
                             </p>
                             <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1.2 }}>
-                                {formatIPCValue(ipcDec)}
+                                {ipcDec < 0.01 ? (
+                                    <ExpandableValue compact={formatIPCValue(ipcDec)} full={getExactIpc(ipcDec)} color="var(--color-text-primary)" />
+                                ) : (
+                                    formatIPCValue(ipcDec)
+                                )}
                             </p>
                         </Card>
                     )}
@@ -183,7 +194,11 @@ export default async function InflacionAnioPage({ params }: PageProps) {
                                                     {monthNames[month - 1]}
                                                 </td>
                                                 <td style={{ padding: '10px 16px', borderBottom: '1px solid var(--color-border)', fontSize: '14px', textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: 'var(--color-text-primary)' }}>
-                                                    {formatIPCValue(entry.value)}
+                                                    {entry.value < 0.01 ? (
+                                                        <ExpandableValue compact={formatIPCValue(entry.value)} full={getExactIpc(entry.value)} color="var(--color-text-primary)" />
+                                                    ) : (
+                                                        formatIPCValue(entry.value)
+                                                    )}
                                                 </td>
                                                 <td style={{ padding: '10px 16px', borderBottom: '1px solid var(--color-border)', fontSize: '14px', textAlign: 'right', fontVariantNumeric: 'tabular-nums', color: 'var(--color-error)' }}>
                                                     {monthlyVar ? `+${monthlyVar}` : '—'}
@@ -225,7 +240,7 @@ export default async function InflacionAnioPage({ params }: PageProps) {
                 {/* Year navigation */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     {adjPrev ? (
-                        <a href={`/${adjPrev}`} style={{ color: 'var(--color-primary-action)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+                        <a href={`/inflacion-por-anio/${adjPrev}`} style={{ color: 'var(--color-primary-action)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
                             ← Inflación {adjPrev}
                         </a>
                     ) : <span />}
@@ -233,7 +248,7 @@ export default async function InflacionAnioPage({ params }: PageProps) {
                         Volver a la calculadora
                     </a>
                     {adjNext ? (
-                        <a href={`/${adjNext}`} style={{ color: 'var(--color-primary-action)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+                        <a href={`/inflacion-por-anio/${adjNext}`} style={{ color: 'var(--color-primary-action)', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
                             Inflación {adjNext} →
                         </a>
                     ) : <span />}
