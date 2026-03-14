@@ -4,7 +4,7 @@
   "base": "2016-12",
   "source": "INDEC — Series históricas empalmadas + IPC Nacional",
   "sourceUrl": "https://www.indec.gob.ar/indec/web/Nivel4-Tema-3-5-31",
-  "lastUpdated": "2026-03-13T14:48:55.978Z",
+  "lastUpdated": "2026-03-14T14:34:18.139Z",
   "series": [
     {
       "date": "1943-01",
@@ -3853,6 +3853,10 @@
     {
       "date": "2026-01",
       "value": 10413.0309
+    },
+    {
+      "date": "2026-02",
+      "value": 10714.6255
     }
   ],
   "segments": [
@@ -3878,7 +3882,7 @@
       "label": "IPC Nacional (base diciembre 2016)",
       "source": "INDEC — Serie vigente",
       "startDate": "2016-12",
-      "endDate": "2026-01"
+      "endDate": "2026-02"
     }
   ],
   "gapMonths": [
